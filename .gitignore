@@ -1,0 +1,9 @@
+*.ipynb
+data/*
+*.tif
+*.png
+*.pdf
+*.mat
+*.fig
+.ipynb_checkpoints/*
+*.zip

@@ -1,0 +1,42 @@
+%%
+offset = gui_optimize_image_offset(ops.meanImg,green_mean);
+%%
+redundancy = zeros(size(green_mean));
+for i=1:size(ops.yblock,1)
+    yrg = ops.yblock(i,1)+1:ops.yblock(i,2);
+    xrg = ops.xblock(i,1)+1:ops.xblock(i,2);
+    redundancy(yrg,xrg) = redundancy(yrg,xrg)+1;
+end
+%%
+offsets = zeros(size(ops.yblock,1),2);
+A = ops.meanImg;
+B = circshift(green_mean,offset);
+offset_image = zeros([size(green_mean) 2]);
+registered_image = zeros(size(green_mean));
+for i=1:size(ops.yblock,1)
+    yrg = ops.yblock(i,1)+1:ops.yblock(i,2);
+    xrg = ops.xblock(i,1)+1:ops.xblock(i,2);
+    [u,v] = fftalign_dpm(A(yrg,xrg),B(yrg,xrg));
+    offsets(i,:) = [u v];
+    for idim=1:2
+        offset_image(yrg,xrg,idim) = offset_image(yrg,xrg,idim) - offsets(i,idim);
+    end
+    registered_image(yrg,xrg) = registered_image(yrg,xrg) + circshift(B(yrg,xrg),-offsets(i,:));
+%     offsets(i,:) = gui_optimize_image_offset(ops.meanImg(yrg,xrg),green_mean(yrg,xrg),init_offset);
+%     init_offset = offsets(i,:);
+end
+offset_image = offset_image./repmat(redundancy,[1 1 2]);
+registered_image = registered_image./redundancy;
+% %%
+% offsetbox = permute(reshape(offsets,[8 6 2]),[2 1 3]);
+%%
+% figure
+% subplot(1,2,1)
+% imagesc(offset_image(:,:,1))
+% subplot(1,2,2)
+% imagesc(offset_image(:,:,2))
+%%
+flowed_image = apply_flowfield(green_mean,offset_image);
+%%
+rg = combine_rg(corrected,registered_image,1);
+imshow(rg)
