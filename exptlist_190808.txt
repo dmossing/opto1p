@@ -1,0 +1,7 @@
+#exptfold
+#one-channel
+#two-channel
+
+190807/M0153/
+3,4
+1,2,5,6

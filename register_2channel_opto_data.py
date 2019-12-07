@@ -4,39 +4,36 @@ import sys
 import os
 sys.path.insert(0, '/home/mossing/code/adesnal')
 import run_pipeline_tiffs as rpt
+import read_exptlist as re
 
-foldname = []
-filenames = []
+suite2p_fold = '/home/mossing/data1/suite2P/'
+sbx_fold = '/home/mossing/modulation/2P/'
 
-#foldname.append('190301/M9835/')
-#filenames.append([1,888])
-#
-#foldname.append('190307/M9835/')
-#filenames.append([1,999])
-#
-foldname.append('190318/M10338/')
-filenames.append([2,999])
+raw_fold = suite2p_fold + 'raw/'
+result_fold = suite2p_fold + 'results/'
 
-foldname.append('190320/M10365/')
-filenames.append([1,999])
-
-foldname.append('190410/M10368/')
-filenames.append([2])
-
-foldname.append('190411/M0002/')
-filenames.append([4])
-
-foldname.append('190501/M0094/')
-filenames.append([4])
-
-for i in range(len(foldname)):
+def run(exptfilename,diameter=15):
     
-    matlab_cmd = '"' + "gen_2channel_tiffs('" + foldname[i] + "'," + str(filenames[i]) + "); exit" + '"'
-    print(matlab_cmd)
-    os.system('matlab -r ' + matlab_cmd)
+    foldname = []
+    filenames = []
+    foldname,filenames = re.read_exptlist(exptfilename,lines_per_expt=4,fileline=2)
+    
+    for i in range(len(foldname)):
+        
+        matlab_options = "options.green_only = 0; options.targetfold = '" + raw_fold + "'; options.data_foldbase = '" + sbx_fold + "'; "
+    
+        matlab_cmd = '"' + matlab_options + "gen_2channel_tiffs('" + foldname[i] + "'," + str(filenames[i]) + ",options); exit" + '"'
+        print(matlab_cmd)
+        os.system('matlab -r ' + matlab_cmd)
+    
+        fileparts = foldname[i].split('/') 
+        date = fileparts[0]
+        animalid = fileparts[1]
+        expt_ids = [str(x) for x in filenames[i]]
+        rpt.process_data(animalid,date,expt_ids,nchannels=2,delete_raw=True,raw_base=raw_fold,result_base=result_fold,diameter=diameter)
 
-    fileparts = foldname[i].split('/') 
-    date = fileparts[0]
-    animalid = fileparts[1]
-    expt_ids = [str(x) for x in filenames[i]]
-    rpt.process_data(animalid,date,expt_ids,nchannels=2,delete_raw=True)
+if __name__ == "__main__":
+    if len(sys.argv)>2:
+        run(sys.argv[1],diameter=sys.argv[2])
+    else:
+        run(sys.argv[1])

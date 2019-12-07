@@ -14,11 +14,11 @@ result_fold = suite2p_fold + 'results/'
 
 foldname = []
 filenames = []
-foldname,filenames = re.read_exptlist('exptlist_191118.txt',lines_per_expt=4,fileline=(1,2)) # 190709
+foldname,filenames = re.read_exptlist('exptlist_190623.txt',lines_per_expt=4,fileline=2)
 
 for i in range(len(foldname)):
     
-    matlab_options = "options.green_only = 1; options.targetfold = '" + raw_fold + "'; options.data_foldbase = '" + sbx_fold + "'; "
+    matlab_options = "options.green_only = 0; options.targetfold = '" + raw_fold + "'; options.data_foldbase = '" + sbx_fold + "'; "
 
     matlab_cmd = '"' + matlab_options + "gen_2channel_tiffs('" + foldname[i] + "'," + str(filenames[i]) + ",options); exit" + '"'
     print(matlab_cmd)
@@ -28,4 +28,4 @@ for i in range(len(foldname)):
     date = fileparts[0]
     animalid = fileparts[1]
     expt_ids = [str(x) for x in filenames[i]]
-    rpt.process_data(animalid,date,expt_ids,nchannels=1,delete_raw=True,raw_base=raw_fold,result_base=result_fold)
+    #rpt.process_data(animalid,date,expt_ids,nchannels=2,delete_raw=True,raw_base=raw_fold,result_base=result_fold)

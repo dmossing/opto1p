@@ -1,0 +1,31 @@
+#exptfold
+#one-channel
+#two-channel
+# need to rerun register_bothchannel on this one:
+#190318/M10338/
+#3
+#2
+# need to rerun register_bothchannel on this one:
+#190320/M10365/
+#2
+#1
+# this next one is needful:
+190408/M0002/
+3,4
+2
+# this next one is needful:
+190411/M0002/
+5,6
+4
+# this next one is needful:
+190503/M0002/
+6,7
+5,8
+# this next one is needful:
+190506/M10368/
+3,4
+2
+# this next one is needful:
+190508/M0094/
+3,4
+2,5
