@@ -8,7 +8,7 @@ import run_pipeline_tiffs as rpt
 import read_exptlist as re
 
 matfile_fold = '/home/mossing/modulation/matfiles/'
-suite2p_fold = '/home/mossing/data1/suite2P/results/'
+suite2p_fold = '/home/mossing/data1/suite2P/results_to_save_191205/'
 
 def save_meanImg(datafold):
     vars_of_interest = ['meanImg','meanImg_chan2','meanImg_chan2_corrected','meanImgE']
