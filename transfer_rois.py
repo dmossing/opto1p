@@ -2,13 +2,14 @@
 
 import sys
 import os
+with open('path_locations.txt','r') as f:
+    path_locs = f.read().splitlines()
+for loc in path_locs:    
+    sys.path.insert(0,loc)
 import numpy as np
-#sys.path.insert(0, '/home/mossing/code/adesnal')
 import run_pipeline_tiffs as rpt
 import read_exptlist as re
 
-matfile_fold = '/home/mossing/modulation/matfiles/'
-suite2p_fold = '/home/mossing/data1/suite2P/results_to_save_191205/'
 
 def save_meanImg(datafold):
     vars_of_interest = ['meanImg','meanImg_chan2','meanImg_chan2_corrected','meanImgE']
@@ -20,7 +21,7 @@ def save_meanImg(datafold):
             if var in ops:
                 np.save(fold+var+'.npy',ops[var])
 
-def run(exptfilename,fileline=(1,2)):
+def run(exptfilename,fileline=(1,2), matfile_fold = '/home/mossing/modulation/matfiles/', suite2p_fold = '/home/mossing/data1/suite2P/results_to_save_191205/'):
     
     foldname = []
     filenames = []
@@ -52,8 +53,18 @@ def run(exptfilename,fileline=(1,2)):
 
 
 if __name__ == "__main__":
-    if len(sys.argv)>2:
+    if len(sys.argv)>=5:
         fileline = (int(sys.argv[2]),)
     else:
         fileline = (1,2)
-    run(sys.argv[1],fileline=fileline)
+    if len(sys.argv)>=4:
+        location = sys.argv[3]
+        if location == 'big-boi':
+            suite2p_fold  = '/home/mossing/data1/suite2P/'
+            matfile_fold = '/home/mossing/modulation/matfiles/'
+        elif (location == 'cluster') or (location == 'savio'):
+            suite2p_fold  = '/global/scratch/mossing/2Pdata/suite2P/results_to_save_191205/'
+            matfile_fold = '/global/scratch/mossing/matfiles/'
+        run(sys.argv[1],fileline=fileline,suite2p_fold=suite2p_fold,matfile_fold=matfile_fold)
+    else:
+        run(sys.argv[1],fileline=fileline)

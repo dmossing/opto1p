@@ -4,10 +4,10 @@ import sys
 import os
 
 with open('path_locations.txt','r') as f:
-    path_locs = f.readlines()
+    path_locs = f.read().splitlines()
 for loc in path_locs:    
+    print(loc)
     sys.path.insert(0,loc)
-    #sys.path.insert(0, '/global/home/users/mossing/s2p_github')
 import run_pipeline_tiffs as rpt
 import read_exptlist as re
 
@@ -52,7 +52,7 @@ def run(exptfilename,diameter=15,sbx_fold='/home/mossing/modulation/2P/',suite2p
 
         rpt.process_data(animalid,date,expt_ids_1ch,delete_raw=delete_raw,raw_base=raw_fold,result_base=result_fold,diameter=diameter,nchannels=1,fast_disk=fast_disk)
 
-        matlab_options = "addpath(genpath('~/adesnal')); options.green_only = 0; options.targetfold = '" + raw_fold + "'; options.data_foldbase = '" + sbx_fold + "'; "
+        matlab_options = "addpath(genpath('~/adesnal')); options.green_only = 0; options.targetfold = '" + raw_fold + "'; options.data_foldbase = '" + sbx_fold + "'; options.matfile_foldbase = '" + matfile_fold + "';"
         matlab_cmd = '"' + matlab_options + "gen_2channel_tiffs('" + foldname[i] + "'," + str(filenames_2ch[i]) + ",options); exit" + '"'
         print(matlab_cmd)
         os.system('matlab -r ' + matlab_cmd)
@@ -80,7 +80,7 @@ if __name__ == "__main__":
             sbx_fold = '/global/scratch/mossing/2Pdata/'
             matfile_fold = '/global/scratch/mossing/matfiles/'
         run(sys.argv[1],diameter=sys.argv[2],sbx_fold=sbx_fold,suite2p_fold=suite2p_fold,fast_disk=fast_disk,matfile_fold=matfile_fold)
-    if len(sys.argv)==4:
+    elif len(sys.argv)==4:
         run(sys.argv[1],diameter=sys.argv[2],sbx_fold=sys.argv[3])
     elif len(sys.argv)==3:
         run(sys.argv[1],diameter=sys.argv[2])
