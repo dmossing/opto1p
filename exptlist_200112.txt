@@ -1,0 +1,12 @@
+#exptfold
+#one-channel
+#two-channel
+
+200110/M0608
+3,4
+2,5
+
+200111/M0607
+4,5
+3,6
+
